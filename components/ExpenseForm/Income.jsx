@@ -50,4 +50,3 @@ const Income = () => {
 }
 
 export default Income
-git 
