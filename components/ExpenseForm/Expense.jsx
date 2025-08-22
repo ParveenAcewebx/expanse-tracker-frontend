@@ -42,10 +42,10 @@ const Expense = () => {
           placeholder='Enter Amount'
         />
         <FormSelectField
-          label='Catgeory'
-          name='expense.catgeory'
+          label='Category'
+          name='expense.category'
           type='text'
-          placeholder='Select Catgeory'
+          placeholder='Select Category'
           options={categoryData}
         />
         <FormInputField

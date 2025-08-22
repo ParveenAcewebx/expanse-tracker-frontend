@@ -57,11 +57,11 @@ export default function AddExpense() {
   const handleExpenseSubmit = async data => {
     console.log('data-expense', data)
     try {
-      const res = await fetch('/api/expenses', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      }).then(r => r.json())
+      // const res = await fetch('/api/expenses', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(data)
+      // }).then(r => r.json())
 
       successMessage({ description: 'Expense added successfully!' })
       router.push('/dashboard/expense-tracker') // goes back to listing

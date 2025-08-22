@@ -35,10 +35,10 @@ const Income = () => {
       <FormDatePicker label='Date' name='income.date' placeholder="Select Date" />
       <FormInputField label='Amount' name='income.amount' type='number' placeholder="Enter Amount" />
       <FormSelectField
-          label='Catgeory'
-          name='income.catgeory'
+          label='Category'
+          name='income.category'
           type='text'
-          placeholder='Select Catgeory'
+          placeholder='Select Category'
           options={categoryData}
         />
       <FormInputField label='Account' name='income.account' type='number'  placeholder="Enter Account"/>

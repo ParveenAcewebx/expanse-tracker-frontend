@@ -9,15 +9,70 @@ import { Button } from '@/components/ui/button'
 import useDocumentTitle from '@/components/utils/useDocumentTitle'
 import ExpenseServices from '@/services/ExpenseTracker/expense'
 import { Plus } from 'lucide-react'
-import { createServer } from 'miragejs'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { ExpenseColumns } from './Expense-columns'
 
-
-
 const AllExpenseList = () => {
+  const tableData = [
+    {
+      "id":"01",
+      "date": "2025-08-22",
+      "amount": 250.00,
+      "category": "Groceries",
+      "account": "Checking",
+      "note": "Weekly grocery shopping",
+      "description": "Bought vegetables, fruits, and dairy products"
+    },
+    {
+      "id":"02",
+      "date": "2025-08-21",
+      "amount": 1200.50,
+      "category": "Rent",
+      "account": "Bank Transfer",
+      "note": "Monthly apartment rent",
+      "description": "Rent for August 2025"
+    },
+    {
+      "id":"03",
+      "date": "2025-08-20",
+      "amount": 60.75,
+      "category": "Utilities",
+      "account": "Credit Card",
+      "note": "Electricity bill",
+      "description": "Payment for electricity usage in July"
+    },
+    {
+      "id":"04",
+      "date": "2025-08-19",
+      "amount": 45.00,
+      "category": "Transport",
+      "account": "Cash",
+      "note": "Taxi fare",
+      "description": "Taxi from airport to home"
+    },
+    {
+      "id":"05",
+      "date": "2025-08-18",
+      "amount": 300.00,
+      "category": "Entertainment",
+      "account": "Credit Card",
+      "note": "Concert tickets",
+      "description": "Bought tickets for live concert"
+    },
+    {
+      "id":"06",
+      "date": "2025-08-17",
+      "amount": 150.00,
+      "category": "Health",
+      "account": "Checking",
+      "note": "Pharmacy purchase",
+      "description": "Bought medicines and supplements"
+    }
+  ]
+  
+
   useDocumentTitle('All Expenses')
   const router = useRouter()
   const [getList, setList] = useState([])
@@ -37,16 +92,15 @@ const AllExpenseList = () => {
   // fetch all team list
   const getListTeam = async () => {
     try {
-      setLoading(true)
-      const res = await ExpenseServices.getAllExpense()
-      if (res?.status === 200) {
-        setList(res.data.expenses) // MirageJS returns: { expenses: [...] }
-      }
+      // setLoading(true)
+      // const res = await ExpenseServices.getAllExpense()
+      // if (res?.status === 200) {
+      //   setList(res.data.expenses) // MirageJS returns: { expenses: [...] }
+      // }
     } finally {
       setLoading(false)
     }
   }
-  
 
   useEffect(() => {
     getListTeam()
@@ -56,12 +110,12 @@ const AllExpenseList = () => {
   const onDelete = async () => {
     if (deleteIndex !== null) {
       try {
-        const res = await ExpenseServices.deleteExpense(deleteIndex)
-        setDeleteOpenModal(false)
-        if (res?.status === 200) {
-          successMessage({ description: res?.data?.message })
-          getListTeam()
-        }
+        // const res = await ExpenseServices.deleteExpense(deleteIndex)
+        // if (res?.status === 200) {
+          successMessage({ description: "Delete Succesfully" })
+          //   getListTeam()
+          setDeleteOpenModal(false)
+        // }
       } catch (error) {
         console.log('error', error)
         errorMessage({
@@ -116,7 +170,7 @@ const AllExpenseList = () => {
         />
       </FormProvider>
       <DataTable
-        data={getList}
+        data={tableData}
         loading={loading}
         columns={ExpenseColumns(handleDeleteExpense, handleEditExpense)}
         totalRecord={totalRecord}
