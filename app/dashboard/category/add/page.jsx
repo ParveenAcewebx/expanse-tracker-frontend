@@ -11,11 +11,7 @@ import { FormProvider, useForm } from 'react-hook-form'
 export default function AddCategory() {
   useDocumentTitle('Add Category')
   const router = useRouter()
-  const form = useForm({
-    // defaultValues: {
-    // }
-    // resolver: yupResolver(TeamSchema)
-  })
+  const form = useForm()
 
   // handle to submit team form
   const handleCategorySubmit = async data => {
