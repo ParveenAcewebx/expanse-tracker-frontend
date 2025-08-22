@@ -15,9 +15,7 @@ export default function AddCategory() {
   const router = useRouter()
   const form = useForm({
     // defaultValues: {
-    //   name: '',
-    //   contact: [],
-    //   status: ''
+    
     // }
     // resolver: yupResolver(TeamSchema)
   })
