@@ -65,6 +65,11 @@ export const ExpenseColumns = (handleDeleteExpense, handleEditExpense) => [
     cell: ({ row }) => row?.original?.note ||""
   },
   {
+    accessorKey: 'description',
+    header: 'Description',
+    cell: ({ row }) => row?.original?.description ||""
+  },
+  {
     accessorKey: 'action',
     header: 'Actions',
     cell: ({ row }) => {

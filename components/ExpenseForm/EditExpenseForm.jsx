@@ -17,13 +17,20 @@ const EditExpenseForm = ({ editId }) => {
 
   const form = useForm({
     defaultValues: {
-      amount: '',
-      category: '',
-      account: '',
-      note: '',
-      description: '',
-      date: '',
-      image: null
+      expense: {
+        date: '',
+        amount: '',
+        category: '',
+        account: '',
+        note: ''
+      },
+      income: {
+        date: '',
+        amount: '',
+        category: '',
+        account: '',
+        note: ''
+      }
     }
   })
 
@@ -33,9 +40,10 @@ const EditExpenseForm = ({ editId }) => {
   const fetchExpenseById = async () => {
     try {
       const response = await ExpenseServices.getExpenseById(id)
+      console.log("responseeeeeeeddddddddd",response)
       if (response?.status === 200) {
-        const expenseData = response?.data
-        form.reset(expenseData) // populate form with API response
+        const expenseData = response?.data?.expense; 
+        form.reset(expenseData) 
       }
     } catch (error) {
       console.log('error', error)
@@ -54,12 +62,12 @@ const EditExpenseForm = ({ editId }) => {
   // Handle update
   const handleExpenseUpdate = async data => {
     try {
-      const responseEdit = await ExpenseServices.updateExpenseById(id, data)
-      if (responseEdit?.status === 200) {
-        form.reset()
+      // const responseEdit = await ExpenseServices.updateExpenseById(id, data)
+      // if (responseEdit?.status === 200) {
+      //   form.reset()
         successMessage({ description: 'Expense updated successfully!' })
         router.push('/dashboard/expense-tracker')
-      }
+      // }
     } catch (error) {
       console.log('error', error)
       errorMessage({
