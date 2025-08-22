@@ -9,6 +9,7 @@ import { useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import AddExpenseForm from './AddExpenseForm'
 
+
 const EditExpenseForm = ({ editId }) => {
   const searchParams = useSearchParams()
   const id = searchParams.get('id') || editId
@@ -28,7 +29,7 @@ const EditExpenseForm = ({ editId }) => {
 
   useDocumentTitle('Edit Expense')
 
-  // ✅ Fetch expense by ID
+  // Fetch expense by ID
   const fetchExpenseById = async () => {
     try {
       const response = await ExpenseServices.getExpenseById(id)
@@ -50,7 +51,7 @@ const EditExpenseForm = ({ editId }) => {
     }
   }, [id])
 
-  // ✅ Handle update
+  // Handle update
   const handleExpenseUpdate = async data => {
     try {
       const responseEdit = await ExpenseServices.updateExpenseById(id, data)

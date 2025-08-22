@@ -1,6 +1,6 @@
 'use client'
 
-import EditExpenseForm from "@/components/ExpenseForm/EditExpenseForm"
+import EditExpenseForm from '@/components/ExpenseForm/EditExpenseForm'
 
 const EditExpensePage = () => {
   return (
