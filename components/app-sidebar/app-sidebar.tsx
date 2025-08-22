@@ -14,7 +14,7 @@ import NavMain from './nav-main'
 
 const data = {
   home: {
-    title: 'Home',
+    title: 'Dashboard',
     url: '/dashboard',
     icon: HomeIcon,
     isActive: true
