@@ -7,9 +7,9 @@ import { ThemeProvider } from '@/contexts/theme-provider'
 import { authOptions } from '@/lib/auth'
 import { inter } from '@/lib/fonts'
 import { cn } from '@/lib/utils'
+import InitServer from '@/mirage/InitServer'
 import { getServerSession } from 'next-auth'
 import './globals.css'
-import InitServer from '@/mirage/InitServer'
 
 export const metadata = {
   title: {
@@ -57,7 +57,7 @@ export default async function AdminRootLayout({ children }) {
               <main className='min-h-screen'>
                 <Toaster />
                 <LoaderProvider>
-                <InitServer />
+                  <InitServer />
                   <GlobalLoader />
                   {children}
                 </LoaderProvider>

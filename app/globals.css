@@ -1649,3 +1649,8 @@ a:hover {
 .form-control-height {
   @apply h-12 rounded-md border border-gray-300 shadow-none;
 }
+
+.pie-chart{
+  width: 500px!important;
+  height: 500px !important;
+}
