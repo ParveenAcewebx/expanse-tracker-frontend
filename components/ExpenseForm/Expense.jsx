@@ -8,7 +8,7 @@ const Expense = () => {
   const categoryData = [
     {
       label: 'Category 1',
-      value: 'category1'
+      value: '1'
     },
     {
       label: 'Category 2',
@@ -51,7 +51,7 @@ const Expense = () => {
         <FormInputField
           label='Account'
           name='expense.account'
-          type='number'
+          // type='number'
           placeholder='Enter Account'
         />
         <FormInputField

@@ -1,33 +1,38 @@
 'use client'
 import AddCategoryForm from '@/components/CategoryForm/AddCategoryForm'
 import LayoutHeader from '@/components/layoutHeader'
-import DateRangePicker from '@/components/share/form/DateRangePicker'
 import { errorMessage, successMessage } from '@/components/ToasterMessage'
 import { Button } from '@/components/ui/button'
 import useDocumentTitle from '@/components/utils/useDocumentTitle'
-import CategoryServices from '@/services/Category/category'
+import { useExpenseContext } from '@/contexts/UserContext'
 import { useRouter } from 'next/navigation'
 import { FormProvider, useForm } from 'react-hook-form'
+import { v4 as uuidv4 } from 'uuid'
 
 export default function AddCategory() {
   useDocumentTitle('Add Category')
   const router = useRouter()
-  const form = useForm()
+  const form = useForm({
+    defaultValues: {
+      name: '',
+      type: '',
+      parent: ''
+    }
+  })
+  const { setCategory } = useExpenseContext()
 
   // handle to submit team form
   const handleCategorySubmit = async data => {
     try {
-      const formData = new FormData()
+      const newCategory = {
+        id: uuidv4(),
+        ...data
+      }
 
-      // formData.append('name', data.name || '')
-      // formData.append('contact', JSON.stringify(data.contact) || [])
-      // formData.append('status', data.status || '')
+      setCategory(prev => [...prev, newCategory])
 
-      // const response = await CategoryServices.AddCategory(formData)
-      // if (response.status === 200) {
-        successMessage({ description: "Category added successfully! " })
-        router.push('/dashboard/category')
-      // }
+      successMessage({ description: 'Category added successfully!' })
+      router.push('/dashboard/category')
     } catch (error) {
       console.log('error', error)
       errorMessage({
