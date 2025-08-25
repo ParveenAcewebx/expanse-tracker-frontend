@@ -57,7 +57,7 @@ export default async function AdminRootLayout({ children }) {
               <main className='min-h-screen'>
                 <Toaster />
                 <LoaderProvider>
-                  <InitServer />
+                  {/* <InitServer /> */}
                   <GlobalLoader />
                   {children}
                 </LoaderProvider>

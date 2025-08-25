@@ -1,6 +1,7 @@
 'use client'
 import AddCategoryForm from '@/components/CategoryForm/AddCategoryForm'
 import LayoutHeader from '@/components/layoutHeader'
+import DateRangePicker from '@/components/share/form/DateRangePicker'
 import { errorMessage, successMessage } from '@/components/ToasterMessage'
 import { Button } from '@/components/ui/button'
 import useDocumentTitle from '@/components/utils/useDocumentTitle'
@@ -18,15 +19,15 @@ export default function AddCategory() {
     try {
       const formData = new FormData()
 
-      formData.append('name', data.name || '')
-      formData.append('contact', JSON.stringify(data.contact) || [])
-      formData.append('status', data.status || '')
+      // formData.append('name', data.name || '')
+      // formData.append('contact', JSON.stringify(data.contact) || [])
+      // formData.append('status', data.status || '')
 
-      const response = await CategoryServices.AddCategory(formData)
-      if (response.status === 200) {
-        successMessage({ description: response?.data?.message })
-        router.push('/dashboard/expense-tracker')
-      }
+      // const response = await CategoryServices.AddCategory(formData)
+      // if (response.status === 200) {
+        successMessage({ description: "Category added successfully! " })
+        router.push('/dashboard/category')
+      // }
     } catch (error) {
       console.log('error', error)
       errorMessage({

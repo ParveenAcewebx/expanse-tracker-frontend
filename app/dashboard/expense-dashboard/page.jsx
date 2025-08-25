@@ -1,6 +1,7 @@
 'use client'
 
-import FormDatePickerRange from '@/components/share/form/DateRangePicker'
+import FormDateRangePickerField from '@/components/share/form/DateRangePicker'
+import DateRangePicker from '@/components/share/form/DateRangePicker'
 import { Card } from '@/components/ui/card'
 import {
   ArcElement,
@@ -13,6 +14,8 @@ import {
   PointElement,
   Tooltip
 } from 'chart.js'
+import { startOfToday } from 'date-fns'
+import { useState } from 'react'
 import { Bar, Line, Pie } from 'react-chartjs-2'
 import { FormProvider, useForm } from 'react-hook-form'
 
@@ -30,7 +33,7 @@ ChartJS.register(
 const ExpenseDashboard = () => {
   const form = useForm({
     defaultValues: {
-      date:  new Date()
+      date: new Date()
     }
   })
   const dummyData = {
@@ -55,6 +58,10 @@ const ExpenseDashboard = () => {
     ]
   }
 
+  const [date, setDate] = useState({
+    from: startOfToday(),
+    to: startOfToday()
+  })
   const totalExpenseAmount = dummyData.totalExpenses.reduce(
     (acc, item) => acc + item.amount,
     0
@@ -148,10 +155,11 @@ const ExpenseDashboard = () => {
         <h2 className='text-xl'>Dashboard</h2>
         <FormProvider {...form}>
           <form>
-            <FormDatePickerRange
+            <DateRangePicker
               form={form}
               name='date'
-             
+              setDate={setDate}
+              date={date}
             />
           </form>
         </FormProvider>
