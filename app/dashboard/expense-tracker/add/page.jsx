@@ -1,16 +1,20 @@
 'use client'
 import AddExpenseForm from '@/components/ExpenseForm/AddExpenseForm'
 import LayoutHeader from '@/components/layoutHeader'
-import DateRangePicker from '@/components/share/form/DateRangePicker'
 import { errorMessage, successMessage } from '@/components/ToasterMessage'
 import { Button } from '@/components/ui/button'
 import useDocumentTitle from '@/components/utils/useDocumentTitle'
+import { useExpenseContext } from '@/contexts/UserContext'
 import { useRouter } from 'next/navigation'
 import { FormProvider, useForm } from 'react-hook-form'
+import { v4 as uuidv4 } from 'uuid'
+
 
 export default function AddExpense() {
   useDocumentTitle('Add Expense')
   const router = useRouter()
+  const { setExpenses } = useExpenseContext() 
+
   const form = useForm({
     defaultValues: {
       expense: {
@@ -18,7 +22,8 @@ export default function AddExpense() {
         amount: '',
         category: '',
         account: '',
-        note: ''
+        note: '',
+        description: ''
       },
       income: {
         date: '',
@@ -28,70 +33,41 @@ export default function AddExpense() {
         note: ''
       }
     }
-    // resolver: yupResolver(TeamSchema)
   })
 
-  // handle to submit team form
-  // const handleExpenseSubmit = async (data) => {
-  //   // try {
-  //     await fetch("/api/expenses", {
-  //       method: "POST",
-  //       body: JSON.stringify({ title, amount }),
-  //     })
-  //     fetchExpenses()
-  //   //   const response = await ExpenseServices.AddExpense(data);
-  //   //   console.log("responseadd", response);
-
-  //   //   if (response.status === 200 || response.status === 201) {
-  //   //     successMessage({ description: "Expense added successfully!" });
-  //   //     router.push("/dashboard/expense-tracker"); // goes back to listing
-  //   //   }
-  //   // } catch (error) {
-  //   //   console.log("error", error);
-  //   //   errorMessage({
-  //   //     description: error?.response?.data?.message || "Submission failed. Please try again.",
-  //   //   });
-  //   // }
-  // };
-
-  // In AddExpense component
-  const handleExpenseSubmit = async data => {
-    console.log('dataEE', data)
+  // Handle form submit
+  const handleExpenseSubmit = data => {
     try {
-      const formData = new FormData()
-
-      // formData.append('expense.amount', data.expense.amount || '')
-      // formData.append('expense.category', data.expense.category || '')
-      // formData.append('expense.account', data.expense.account || '')
-      // formData.append('expense.note', data.expense.note || '')
-      // formData.append('expense.note', data.expense.note || '')
-      // formData.append('expense.description', data.expense.description || '')
-
-      // formData.append('income.amount', data.income.amount || '')
-      // formData.append('income.category', data.income.category || '')
-      // formData.append('income.account', data.income.account || '')
-      // formData.append('income.note', data.income.note || '')
-      // formData.append('income.note', data.income.note || '')
-
-      // const res = await fetch('/api/expenses', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(data)
-      // }).then(r => r.json())
-
+      const newExpense = {
+        id: uuidv4(),
+        expense: {
+          ...data.expense,
+          date: data.expense.date instanceof Date
+            ? data.expense.date.toISOString().split('T')[0]
+            : data.expense.date
+        },
+        income: {
+          ...data.income,
+          date: data.income.date instanceof Date
+            ? data.income.date.toISOString().split('T')[0]
+            : data.income.date
+        }
+      }
+  
+      setExpenses(prev => [...prev, newExpense])
       successMessage({ description: 'Expense added successfully!' })
-      router.push('/dashboard/expense-tracker') // goes back to listing
-
-      // Push new expense to listing state if you have it in context
-      // e.g., using router.push or global store
+      router.push('/dashboard/expense-tracker')
     } catch (error) {
+      console.log('error', error)
       errorMessage({ description: 'Submission failed. Please try again.' })
     }
   }
+  
 
   const handleBackButton = () => {
     router.back()
   }
+
   return (
     <>
       <div className='flex justify-between'>

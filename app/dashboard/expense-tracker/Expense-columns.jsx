@@ -1,73 +1,45 @@
 'use client'
 
-import { Button } from "@/components/ui/button"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { Edit, Trash2 } from "lucide-react"
+import { Button } from '@/components/ui/button'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '@/components/ui/tooltip'
+import { Edit, Trash2 } from 'lucide-react'
 
 export const ExpenseColumns = (handleDeleteExpense, handleEditExpense) => [
-  // {
-  //   accessorKey: 'action',
-  //   header: 'Actions',
-  //   cell: ({ row }) => {
-  //     return (
-  //       <>
-  //         <DropdownMenu>
-  //           <DropdownMenuTrigger asChild>
-  //             <Button variant='ghost' className='h-8 w-8 p-0'>
-  //               <EllipsisVertical className='h-5 w-5' />
-  //             </Button>
-  //           </DropdownMenuTrigger>
-  //           <DropdownMenuContent align='end'>
-  //             <DropdownMenuItem
-  //               onClick={() => handleEditExpense(row)}
-  //               className='cursor-pointer hover:!bg-gray-200 hover:!text-indigo-600'
-  //             >
-  //               <Edit className='mr-2 h-4 w-4' />
-  //               Edit
-  //             </DropdownMenuItem>
-  //             <DropdownMenuItem
-  //               onClick={() => handleDeleteExpense(row)}
-  //               className='cursor-pointer hover:!bg-gray-200 hover:!text-indigo-600'
-  //             >
-  //               <Trash2 className='mr-2 h-4 w-4' />
-  //               Delete
-  //             </DropdownMenuItem>
-  //           </DropdownMenuContent>
-  //         </DropdownMenu>
-  //       </>
-  //     )
-  //   }
-  // },
   {
     id: 'date',
     header: 'Date',
-    cell: ({ row }) => row?.original?.date ||"-"
+    cell: ({ row }) => row?.original?.expense?.date || ''
   },
 
   {
     id: 'amount',
     header: 'Amount',
-    cell: ({ row }) => row?.original?.amount
+    cell: ({ row }) => row?.original?.expense?.amount || ''
   },
   {
     id: 'category',
     header: 'Category',
-    cell: ({ row }) => row?.original?.category
+    cell: ({ row }) => row?.original?.expense?.category || ''
   },
   {
     id: 'account',
     header: 'Account',
-    cell: ({ row }) => row?.original?.account
+    cell: ({ row }) => row?.original?.expense?.account || ''
   },
   {
     accessorKey: 'note',
     header: 'Note',
-    cell: ({ row }) => row?.original?.note ||""
+    cell: ({ row }) => row?.original?.expense?.note || ''
   },
   {
     accessorKey: 'description',
     header: 'Description',
-    cell: ({ row }) => row?.original?.description ||""
+    cell: ({ row }) => row?.original?.expense?.description || ''
   },
   {
     accessorKey: 'action',

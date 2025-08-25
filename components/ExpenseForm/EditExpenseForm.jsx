@@ -7,11 +7,13 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import AddExpenseForm from './AddExpenseForm'
+import { useExpenseContext } from '@/contexts/UserContext'
 
 const EditExpenseForm = ({ editId }) => {
   const searchParams = useSearchParams()
   const id = searchParams.get('id') || editId
   const router = useRouter()
+  const { expenses, setExpenses } = useExpenseContext()
 
   const form = useForm({
     defaultValues: {
@@ -20,7 +22,8 @@ const EditExpenseForm = ({ editId }) => {
         amount: '',
         category: '',
         account: '',
-        note: ''
+        note: '',
+        description: ''
       },
       income: {
         date: '',
@@ -34,58 +37,70 @@ const EditExpenseForm = ({ editId }) => {
 
   useDocumentTitle('Edit Expense')
 
-  // Fetch expense by ID
-  const fetchExpenseById = async () => {
-    // try {
-    //   const response = await ExpenseServices.getExpenseById(id)
-    //   if (response?.status === 200) {
-    //     const expenseData = response?.data?.expense;
-    //     form.reset(expenseData)
-    //   }
-    // } catch (error) {
-    //   console.log('error', error)
-    //   errorMessage({
-    //     description: error?.response?.data?.message || 'Failed to load expense'
-    //   })
-    // }
-  }
-
+  // Pre-fill form with expense from context
   useEffect(() => {
     if (id) {
-      fetchExpenseById()
-    }
-  }, [id])
-
-  // Handle update
-  const handleExpenseUpdate = async data => {
-    try {
-
-      const formData = new FormData()
+      const expenseData = expenses.find(exp => exp.id === id)
+      if (!expenseData) return
   
-      // formData.append('expense.amount', data.expense.amount || '')
-      // formData.append('expense.category', data.expense.category || '')
-      // formData.append('expense.account', data.expense.account || '')
-      // formData.append('expense.note', data.expense.note || '')
-      // formData.append('expense.note', data.expense.note || '')
-      // formData.append('expense.description', data.expense.description || '')
-      
-      // const responseEdit = await ExpenseServices.updateExpenseById(id, data)
-      // if (responseEdit?.status === 200) {
-      //   form.reset()
-      successMessage({ description: 'Expense updated successfully!' })
-      router.push('/dashboard/expense-tracker')
-      // }
-    } catch (error) {
-      console.log('error', error)
-      errorMessage({
-        description: error?.response?.data?.message || 'Update failed'
+      form.reset({
+        id: expenseData.id,
+        expense: {
+          date: expenseData.expense.date || "",
+          amount: expenseData.expense.amount || "",
+          category: String(expenseData.expense.category) || "", // must have value
+          account: expenseData.expense.account || "",
+          note: expenseData.expense.note || "",
+          description: expenseData.expense.description || "",
+          image: expenseData.expense.image || undefined
+        },
+        income: {
+          date: expenseData.income?.date || "",
+          amount: expenseData.income?.amount || "",
+          category: expenseData.income?.category || "",
+          account: expenseData.income?.account || "",
+          note: expenseData.income?.note || ""
+        }
       })
     }
+  }, [id, expenses, form])
+  
+  
+  
+  
+
+  // Handle form submit
+  const handleExpenseUpdate = data => {
+    try {
+      const updatedExpense = {
+        id, // keep the same id
+        expense: {
+          ...data.expense,
+          date: data.expense.date instanceof Date
+            ? data.expense.date.toISOString().split('T')[0]
+            : data.expense.date
+        },
+        income: {
+          ...data.income,
+          date: data.income.date instanceof Date
+            ? data.income.date.toISOString().split('T')[0]
+            : data.income.date
+        }
+      }
+
+      setExpenses(prev =>
+        prev.map(exp => (exp.id === id ? updatedExpense : exp))
+      )
+
+      successMessage({ description: 'Expense updated successfully!' })
+      router.push('/dashboard/expense-tracker')
+    } catch (error) {
+      console.log('error', error)
+      errorMessage({ description: 'Update failed' })
+    }
   }
 
-  const handleBackButton = () => {
-    router.back()
-  }
+  const handleBackButton = () => router.back()
 
   return (
     <>

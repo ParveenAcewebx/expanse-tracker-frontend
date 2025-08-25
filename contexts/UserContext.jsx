@@ -1,4 +1,9 @@
+
 'use client'
-import { createContext } from "react";
-const UserContext = createContext();
-export default UserContext;
+import { createContext, useContext } from 'react'
+
+const UserContext = createContext()
+
+export const useExpenseContext = () => useContext(UserContext)
+
+export default UserContext

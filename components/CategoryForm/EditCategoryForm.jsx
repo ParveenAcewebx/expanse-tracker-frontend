@@ -3,51 +3,48 @@ import LayoutHeader from '@/components/layoutHeader'
 import { errorMessage, successMessage } from '@/components/ToasterMessage'
 import { Button } from '@/components/ui/button'
 import useDocumentTitle from '@/components/utils/useDocumentTitle'
-import ExpenseServices from '@/services/ExpenseTracker/expense'
+import { useExpenseContext } from '@/contexts/UserContext'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import AddCategoryForm from './AddCategoryForm'
-import CategoryServices from '@/services/Category/category'
 
 const EditCategoryForm = ({ editId }) => {
   const searchParams = useSearchParams()
   const id = searchParams.get('id') || editId
-
+  const { category, setCategory } = useExpenseContext()
   const form = useForm({
     defaultValues: {
       name: '',
-      contact: [],
-      status: ''
+      type: '',
+      parent: ''
     }
   })
   useDocumentTitle('Edit Expense')
   const router = useRouter()
 
-  // Fetch the team data by Id
-  const fetchExpenseById = async () => {
-    // try {
-    //   const response = await CategoryServices.getCategoryById(id)
-    //   if (response?.status === 200) {
-    //     const teamData = response?.data?.data
-    //     form.reset(teamData)
-    //   }
-    // } catch (error) {
-    //   console.log('error', error)
-    //   errorMessage({
-    //     description: error?.response?.data?.message
-    //   })
-    // }
-  }
+  //set value in the edit  form
   useEffect(() => {
-    if (id) {
-      fetchExpenseById()
+    const cat = category.find(c => c.id === id)
+    if (cat) {
+      console.log('categoryyyyy', cat.type)
+      // Reset all values including type
+      form.reset({
+        name: cat.name,
+        parent: cat.parent || '',
+        type: cat.type || '',
+
+      })
+    } else {
+      errorMessage({ description: 'Category not found!' })
+      router.push('/dashboard/category')
     }
-  }, [id])
+  }, [id, category, form, router])
 
   // handle to update team form
   const handleExpenseUpdate = async data => {
     try {
+      setCategory(prev => prev.map(cat => (cat.id === data.id ? data : cat)))
       // const formData = new FormData()
       // formData.append('_method', 'PUT')
       // formData.append('id', id || '')
@@ -57,9 +54,9 @@ const EditCategoryForm = ({ editId }) => {
 
       // const responseEdit = await CategoryServices.updateCategoryById(id, formData)
       // if (responseEdit?.status === 200) {
-        form.reset()
-        successMessage({ description: "Category updated successfully" })
-        router.push('/dashboard/category')
+      form.reset()
+      successMessage({ description: 'Category updated successfully' })
+      router.push('/dashboard/category')
       // }
     } catch (error) {
       console.log('error', error)

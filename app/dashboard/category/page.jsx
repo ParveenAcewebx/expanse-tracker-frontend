@@ -7,6 +7,7 @@ import { DataTable } from '@/components/Table'
 import { errorMessage, successMessage } from '@/components/ToasterMessage'
 import { Button } from '@/components/ui/button'
 import useDocumentTitle from '@/components/utils/useDocumentTitle'
+import { useExpenseContext } from '@/contexts/UserContext'
 import CategoryServices from '@/services/Category/category'
 import { Plus } from 'lucide-react'
 import { useRouter } from 'next/navigation'
@@ -24,44 +25,8 @@ const AllCategoryList = () => {
   const [loading, setLoading] = useState(true)
   const [length, setLength] = useState(10)
   const [deleteIndex, setDeleteIndex] = useState(null)
-  const dummyData = [
-    {
-      name: "Groceries",
-      parent: "Food",
-      category: "Essentials",
-      type: "Expense",
-      Actions: ["Edit", "Delete"]
-    },
-    {
-      name: "Salary",
-      parent: "Income",
-    category: "Monthly Income",
-      type: "Income",
-      Actions: ["Edit", "Delete"]
-    },
-    {
-      name: "Electricity",
-      parent: "Utilities",
-    category: "Bills",
-      type: "Expense",
-      Actions: ["Edit", "Delete"]
-    },
-    {
-      name: "Freelance",
-      parent: "Income",
-    category: "Side Income",
-      type: "Income",
-      Actions: ["Edit", "Delete"]
-    },
-    {
-      name: "Internet",
-      parent: "Utilities",
-    category: "Bills",
-      type: "Expense",
-      Actions: ["Edit", "Delete"]
-    }
-  ];
-  
+
+  const { category, setCategory } = useExpenseContext()
 
   const methods = useForm({
     defaultValues: {
@@ -92,27 +57,28 @@ const AllCategoryList = () => {
     getListTeam()
   }, [page, length])
 
-  // delete row
-  const onDelete = async () => {
-    if (deleteIndex !== null) {
-      try {
-        const res = await CategoryServices.deleteCategory(deleteIndex)
-        setDeleteOpenModal(false)
-        if (res?.status === 200) {
-          successMessage({ description: res?.data?.message })
-          getListTeam()
-        }
-      } catch (error) {
-        console.log('error', error)
-        errorMessage({
-          description: error?.response?.data?.message
-        })
-      }
-    }
-  }
   const handleDeleteCategory = row => {
     setDeleteOpenModal(true)
     setDeleteIndex(row?.original?.id)
+  }
+  // delete row
+  const onDelete = async () => {
+    setCategory(prev => prev.filter(cat => cat.id !== deleteIndex))
+    successMessage({ description: 'Deleted Successfully' })
+    setDeleteOpenModal(false)
+    // if (deleteIndex !== null) {
+    //   try {
+    //     const res = await CategoryServices.deleteCategory(deleteIndex)
+    //     if (res?.status === 200) {
+    //       getListTeam()
+    //     }
+    //   } catch (error) {
+    //     console.log('error', error)
+    //     errorMessage({
+    //       description: error?.response?.data?.message
+    //     })
+    //   }
+    // }
   }
   const deleteHandleModalClose = () => {
     setDeleteOpenModal(false)
@@ -156,7 +122,7 @@ const AllCategoryList = () => {
         />
       </FormProvider>
       <DataTable
-        data={dummyData}
+        data={category}
         loading={loading}
         columns={CategoryColumns(handleDeleteCategory, handleEditCategory)}
         totalRecord={totalRecord}
