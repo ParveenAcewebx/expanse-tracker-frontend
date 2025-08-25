@@ -44,7 +44,7 @@ export default async function AdminDashboardLayout({ children }) {
               </header>
               <div className='bg-white p-4'>
                 <Toaster />
-                <InitServer />
+                {/* <InitServer /> */}
                 {children}
               </div>
               <GlobalLoader />

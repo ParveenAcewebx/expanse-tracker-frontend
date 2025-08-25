@@ -1,6 +1,7 @@
 'use client'
 import AddExpenseForm from '@/components/ExpenseForm/AddExpenseForm'
 import LayoutHeader from '@/components/layoutHeader'
+import DateRangePicker from '@/components/share/form/DateRangePicker'
 import { errorMessage, successMessage } from '@/components/ToasterMessage'
 import { Button } from '@/components/ui/button'
 import useDocumentTitle from '@/components/utils/useDocumentTitle'
@@ -55,8 +56,23 @@ export default function AddExpense() {
 
   // In AddExpense component
   const handleExpenseSubmit = async data => {
-    console.log('data-expense', data)
+    console.log('dataEE', data)
     try {
+      const formData = new FormData()
+
+      // formData.append('expense.amount', data.expense.amount || '')
+      // formData.append('expense.category', data.expense.category || '')
+      // formData.append('expense.account', data.expense.account || '')
+      // formData.append('expense.note', data.expense.note || '')
+      // formData.append('expense.note', data.expense.note || '')
+      // formData.append('expense.description', data.expense.description || '')
+
+      // formData.append('income.amount', data.income.amount || '')
+      // formData.append('income.category', data.income.category || '')
+      // formData.append('income.account', data.income.account || '')
+      // formData.append('income.note', data.income.note || '')
+      // formData.append('income.note', data.income.note || '')
+
       // const res = await fetch('/api/expenses', {
       //   method: 'POST',
       //   headers: { 'Content-Type': 'application/json' },

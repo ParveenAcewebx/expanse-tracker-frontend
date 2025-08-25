@@ -3,12 +3,10 @@ import LayoutHeader from '@/components/layoutHeader'
 import { errorMessage, successMessage } from '@/components/ToasterMessage'
 import { Button } from '@/components/ui/button'
 import useDocumentTitle from '@/components/utils/useDocumentTitle'
-import ExpenseServices from '@/services/ExpenseTracker/expense'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import AddExpenseForm from './AddExpenseForm'
-
 
 const EditExpenseForm = ({ editId }) => {
   const searchParams = useSearchParams()
@@ -38,19 +36,18 @@ const EditExpenseForm = ({ editId }) => {
 
   // Fetch expense by ID
   const fetchExpenseById = async () => {
-    try {
-      const response = await ExpenseServices.getExpenseById(id)
-      console.log("responseeeeeeeddddddddd",response)
-      if (response?.status === 200) {
-        const expenseData = response?.data?.expense; 
-        form.reset(expenseData) 
-      }
-    } catch (error) {
-      console.log('error', error)
-      errorMessage({
-        description: error?.response?.data?.message || 'Failed to load expense'
-      })
-    }
+    // try {
+    //   const response = await ExpenseServices.getExpenseById(id)
+    //   if (response?.status === 200) {
+    //     const expenseData = response?.data?.expense;
+    //     form.reset(expenseData)
+    //   }
+    // } catch (error) {
+    //   console.log('error', error)
+    //   errorMessage({
+    //     description: error?.response?.data?.message || 'Failed to load expense'
+    //   })
+    // }
   }
 
   useEffect(() => {
@@ -62,11 +59,21 @@ const EditExpenseForm = ({ editId }) => {
   // Handle update
   const handleExpenseUpdate = async data => {
     try {
+
+      const formData = new FormData()
+  
+      // formData.append('expense.amount', data.expense.amount || '')
+      // formData.append('expense.category', data.expense.category || '')
+      // formData.append('expense.account', data.expense.account || '')
+      // formData.append('expense.note', data.expense.note || '')
+      // formData.append('expense.note', data.expense.note || '')
+      // formData.append('expense.description', data.expense.description || '')
+      
       // const responseEdit = await ExpenseServices.updateExpenseById(id, data)
       // if (responseEdit?.status === 200) {
       //   form.reset()
-        successMessage({ description: 'Expense updated successfully!' })
-        router.push('/dashboard/expense-tracker')
+      successMessage({ description: 'Expense updated successfully!' })
+      router.push('/dashboard/expense-tracker')
       // }
     } catch (error) {
       console.log('error', error)

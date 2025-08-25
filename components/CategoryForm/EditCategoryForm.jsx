@@ -26,18 +26,18 @@ const EditCategoryForm = ({ editId }) => {
 
   // Fetch the team data by Id
   const fetchExpenseById = async () => {
-    try {
-      const response = await CategoryServices.getCategoryById(id)
-      if (response?.status === 200) {
-        const teamData = response?.data?.data
-        form.reset(teamData)
-      }
-    } catch (error) {
-      console.log('error', error)
-      errorMessage({
-        description: error?.response?.data?.message
-      })
-    }
+    // try {
+    //   const response = await CategoryServices.getCategoryById(id)
+    //   if (response?.status === 200) {
+    //     const teamData = response?.data?.data
+    //     form.reset(teamData)
+    //   }
+    // } catch (error) {
+    //   console.log('error', error)
+    //   errorMessage({
+    //     description: error?.response?.data?.message
+    //   })
+    // }
   }
   useEffect(() => {
     if (id) {
@@ -48,19 +48,19 @@ const EditCategoryForm = ({ editId }) => {
   // handle to update team form
   const handleExpenseUpdate = async data => {
     try {
-      const formData = new FormData()
-      formData.append('_method', 'PUT')
-      formData.append('id', id || '')
-      formData.append('name', data.name || '')
-      formData.append('contact', JSON.stringify(data.contact) || [])
-      formData.append('status', data.status || '')
+      // const formData = new FormData()
+      // formData.append('_method', 'PUT')
+      // formData.append('id', id || '')
+      // formData.append('name', data.name || '')
+      // formData.append('contact', JSON.stringify(data.contact) || [])
+      // formData.append('status', data.status || '')
 
-      const responseEdit = await CategoryServices.updateCategoryById(id, formData)
-      if (responseEdit?.status === 200) {
+      // const responseEdit = await CategoryServices.updateCategoryById(id, formData)
+      // if (responseEdit?.status === 200) {
         form.reset()
-        successMessage({ description: responseEdit?.data?.message })
+        successMessage({ description: "Category updated successfully" })
         router.push('/dashboard/category')
-      }
+      // }
     } catch (error) {
       console.log('error', error)
       errorMessage({

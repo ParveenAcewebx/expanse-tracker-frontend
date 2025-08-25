@@ -102,8 +102,6 @@ export default function NavMain({ homeItem, items }: NavMainProps) {
         {items.map(item => {
           const isOpen = openSection === item.title
           const isActive = item.url && isParentActive(item.title, item.url)
-          console.log('isOpen', isOpen)
-          console.log('isActive', isActive)
 
           return (
             <Collapsible

@@ -1,9 +1,9 @@
+'use client'
+
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import {
   FormControl,
-  FormDescription,
-  FormField,
   FormItem,
   FormLabel,
   FormMessage
@@ -14,79 +14,148 @@ import {
   PopoverTrigger
 } from '@/components/ui/popover'
 import { cn } from '@/lib/utils'
-import { format } from 'date-fns'
-import { FieldValues, Path, UseFormReturn } from 'react-hook-form'
-
+import {
+  endOfMonth,
+  endOfWeek,
+  format,
+  startOfMonth,
+  startOfToday,
+  startOfWeek,
+  startOfYesterday
+} from 'date-fns'
 import { CalendarIcon } from 'lucide-react'
-import { useState } from 'react'
+import * as React from 'react'
+import { useController } from 'react-hook-form'
 
+const shortcuts = [
+  {
+    label: 'Today',
+    getRange: () => ({ from: startOfToday(), to: startOfToday() })
+  },
+  {
+    label: 'Yesterday',
+    getRange: () => ({ from: startOfYesterday(), to: startOfYesterday() })
+  },
+  {
+    label: 'This Week',
+    getRange: () => ({
+      from: startOfWeek(new Date()),
+      to: endOfWeek(new Date())
+    })
+  },
+  {
+    label: 'Last Week',
+    getRange: () => {
+      const start =
+        startOfWeek(new Date(), { weekStartsOn: 1 }) - 7 * 24 * 60 * 60 * 1000
+      const end =
+        endOfWeek(new Date(), { weekStartsOn: 1 }) - 7 * 24 * 60 * 60 * 1000
+      return { from: new Date(start), to: new Date(end) }
+    }
+  },
+  {
+    label: 'This Month',
+    getRange: () => ({
+      from: startOfMonth(new Date()),
+      to: endOfMonth(new Date())
+    })
+  },
+  {
+    label: 'Last Month',
+    getRange: () => {
+      const firstDayLastMonth = startOfMonth(
+        new Date(new Date().setMonth(new Date().getMonth() - 1))
+      )
+      const lastDayLastMonth = endOfMonth(firstDayLastMonth)
+      return { from: firstDayLastMonth, to: lastDayLastMonth }
+    }
+  }
+]
 
-const FormDatePickerRange = ({
-  name,
-  form,
-  label,
-  disabled
-}) => {
-  const [open, setOpen] = useState(false)
+export default function DateRangePicker({ name, from, label, disabled }) {
+  const { field, fieldState } = useController({
+    name,
+    from,
+    defaultValue: { from: null, to: null }
+  })
+
+  const [localDate, setLocalDate] = React.useState(field.value)
+  const [shortcut, setShortcut] = React.useState(null)
+  const [open, setOpen] = React.useState(false)
+
+  const apply = () => {
+    field.onChange(localDate)
+    setOpen(false)
+  }
+
+  const selectShortcut = (s, range) => {
+    setShortcut(s)
+    setLocalDate(range)
+  }
 
   return (
-    <FormField
-      control={form.control}
-      name={name}
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>{label}</FormLabel>
-          <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-              <FormControl>
+    <FormItem>
+      {label && <FormLabel>{label}</FormLabel>}
+      <FormControl>
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant='outline'
+              onClick={() => setOpen(true)}
+              disabled={disabled}
+              className={cn(
+                'flex w-[300px] items-center justify-start gap-2 text-left',
+                !localDate && 'text-muted-foreground'
+              )}
+            >
+              <CalendarIcon className='h-4 w-4' />
+              {localDate?.from
+                ? localDate.to
+                  ? `${format(localDate.from, 'LLL dd, y')} - ${format(localDate.to, 'LLL dd, y')}`
+                  : format(localDate.from, 'LLL dd, y')
+                : 'Pick a date'}
+            </Button>
+          </PopoverTrigger>
+
+          <PopoverContent className='date-range-picker flex gap-4 p-4'>
+            {/* Shortcuts */}
+            <div className='w-1/4 space-y-2 border-r pr-4'>
+              {shortcuts.map(s => (
                 <Button
-                  id='date'
-                  variant='outline'
-                  className={cn(
-                    'h-12 w-full pl-3 text-left font-normal rounded border-color-grey !shadow-none',
-                    !field.value && 'text-muted-foreground'
-                  )}
+                  key={s.label}
+                  variant={shortcut === s.label ? 'default' : 'ghost'}
+                  size='sm'
+                  className='w-full justify-start'
+                  onClick={() => selectShortcut(s.label, s.getRange())}
                 >
-                  <CalendarIcon className='mr-2 h-4 w-4' />
-                  {field.value?.from ? (
-                    field.value.to ? (
-                      <>
-                        {format(field.value.from, 'LLL dd, y')} -{' '}
-                        {format(field.value.to, 'LLL dd, y')}
-                      </>
-                    ) : (
-                      format(field.value.from, 'LLL dd, y')
-                    )
-                  ) : (
-                    <span>Pick a start & end date</span>
-                  )}
+                  {s.label}
                 </Button>
-              </FormControl>
-            </PopoverTrigger>
-            <PopoverContent className='w-auto p-0' align='start'>
+              ))}
+            </div>
+
+            {/* Calendar */}
+            <div className='w-3/4'>
               <Calendar
-                className='bg-white !shadow-[0_0_15px_-13px_black] shadow-slate-100'
-                initialFocus
                 mode='range'
-                defaultMonth={field.value?.from}
-                selected={field.value}
-                onSelect={date => {
-                  if (date?.from && date?.to) {
-                    setOpen(false) // Close the calendar when both dates are selected
-                  }
-                  field.onChange(date)
+                defaultMonth={localDate?.from}
+                selected={localDate}
+                onSelect={range => {
+                  setLocalDate(range)
+                  setShortcut(null)
                 }}
                 numberOfMonths={2}
-                disabled={disabled}
               />
-            </PopoverContent>
-          </Popover>
-          <FormDescription />
-          <FormMessage />
-        </FormItem>
-      )}
-    />
+              <div className='flex justify-end gap-2 pt-4'>
+                <Button variant='ghost' onClick={() => setOpen(false)}>
+                  Close
+                </Button>
+                <Button onClick={apply}>OK</Button>
+              </div>
+            </div>
+          </PopoverContent>
+        </Popover>
+      </FormControl>
+      <FormMessage>{fieldState.error?.message}</FormMessage>
+    </FormItem>
   )
 }
-
-export default FormDatePickerRange
