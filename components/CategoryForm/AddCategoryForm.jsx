@@ -5,8 +5,8 @@ import FormSelectField from '../share/form/FormSelect'
 
 export default function AddCategoryForm({ form, editData }) {
   const categoryType = [
-    { label: 'Expense', value: '01' },
-    { label: 'Income', value: '02' }
+    { label: 'Expense', value: 'expense' },
+    { label: 'Income', value: 'income' }
   ]
   return (
     <>
@@ -32,6 +32,7 @@ export default function AddCategoryForm({ form, editData }) {
           label='Type'
           placeholder='Select type'
           options={categoryType}
+          
         />
         <FileUpload name='icon' label='Choose Icon' />
       </div>
