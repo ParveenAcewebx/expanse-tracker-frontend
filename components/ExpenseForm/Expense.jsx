@@ -4,7 +4,7 @@ import FileUpload from '../share/form/FileUpload'
 import FormInputField from '../share/form/FormInputField'
 import FormSelectField from '../share/form/FormSelect'
 
-const Expense = () => {
+const Expense = ({form}) => {
   const categoryData = [
     {
       label: 'Category 1',
@@ -42,6 +42,7 @@ const Expense = () => {
           placeholder='Enter Amount'
         />
         <FormSelectField
+        form={form}
           label='Category'
           name='expense.category'
           type='text'

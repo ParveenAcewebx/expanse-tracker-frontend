@@ -42,13 +42,13 @@ const EditExpenseForm = ({ editId }) => {
     if (id) {
       const expenseData = expenses.find(exp => exp.id === id)
       if (!expenseData) return
-  
+  console.log("expenseData",expenseData)
       form.reset({
         id: expenseData.id,
         expense: {
           date: expenseData.expense.date || "",
           amount: expenseData.expense.amount || "",
-          category: String(expenseData.expense.category) || "", // must have value
+          category: expenseData.expense.category || "", 
           account: expenseData.expense.account || "",
           note: expenseData.expense.note || "",
           description: expenseData.expense.description || "",
@@ -111,7 +111,7 @@ const EditExpenseForm = ({ editId }) => {
       <div>
         <FormProvider {...form}>
           <form onSubmit={form.handleSubmit(handleExpenseUpdate)}>
-            <AddExpenseForm form={form} editData />
+            <AddExpenseForm form={form}  />
             <div className='mt-4 flex justify-end gap-4'>
               <Button
                 onClick={handleBackButton}
