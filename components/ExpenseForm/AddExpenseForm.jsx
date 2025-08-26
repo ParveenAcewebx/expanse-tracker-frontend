@@ -25,8 +25,8 @@ export default function AddExpenseForm({ form, editData }) {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value='expense'>
-          <Expense />
+        <TabsContent value='expense' >
+          <Expense form={form} />
         </TabsContent>
 
         <TabsContent value='income'>
