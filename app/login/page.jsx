@@ -9,8 +9,9 @@ export default function LoginPage() {
   const { data: session } = useSession()
   const router = useRouter()
 
-  if (session?.user) router.replace('/dashboard/expense-tracker')
+  if (session?.user) router.replace('/dashboard/expenses')
   useDocumentTitle('Login')
 
   return <Login />
 }
+
