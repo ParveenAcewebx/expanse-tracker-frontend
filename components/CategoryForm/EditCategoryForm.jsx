@@ -37,7 +37,7 @@ const EditCategoryForm = ({ editId }) => {
       })
     } else {
       errorMessage({ description: 'Category not found!' })
-      router.push('/dashboard/category')
+      router.push('/dashboard/categories')
     }
   }, [id, category, form, router])
 

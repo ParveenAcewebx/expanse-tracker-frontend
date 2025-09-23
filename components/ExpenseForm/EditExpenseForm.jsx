@@ -93,7 +93,7 @@ const EditExpenseForm = ({ editId }) => {
       )
 
       successMessage({ description: 'Expense updated successfully!' })
-      router.push('/dashboard/expense-tracker')
+      router.push('/dashboard/expenses')
     } catch (error) {
       console.log('error', error)
       errorMessage({ description: 'Update failed' })

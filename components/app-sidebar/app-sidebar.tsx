@@ -7,32 +7,33 @@ import {
   SidebarRail,
   useSidebar
 } from '@/components/ui/sidebar'
-import { CircleDollarSign, HomeIcon, LayoutList } from 'lucide-react'
+import { DocumentTextIcon } from '@heroicons/react/24/outline'
+import { CalendarDays, CircleDollarSign, Fence, IndianRupee, LayoutDashboard, LayoutList, ReceiptIndianRupee, SettingsIcon, SquareUser } from 'lucide-react'
 import Link from 'next/link'
 import NavMain from './nav-main'
-// import { routesUrl } from "../utils/routesUrl";
+import { NavUser } from './nav-user'
 
 const data = {
-  home: {
+home: {
     title: 'Dashboard',
     url: '/dashboard',
-    icon: HomeIcon,
+    icon: LayoutDashboard,                                                                                                                                                                        
     isActive: true
   },
   navMain: [
     {
       title: 'Expense Tracker',
-      url: '/dashboard/expense-tracker',
+      url: '/dashboard/expense',
       icon: CircleDollarSign,
       isActive: true,
       items: [
         {
           title: 'Add',
-          url: '/dashboard/expense-tracker/add'
+          url: '/dashboard/expense/add'
         },
         {
           title: 'List',
-          url: '/dashboard/expense-tracker'
+          url: '/dashboard/expenses'
         }
       ]
     },
@@ -48,27 +49,20 @@ const data = {
         },
         {
           title: 'List',
-          url: '/dashboard/category'
+          url: '/dashboard/categories'
         }
       ]
     }
   ]
 }
 
-export function AppSidebar({ ...props }) {
+
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { state } = useSidebar()
   return (
-    <>
-      <Sidebar collapsible='icon' {...props}>
-        <SidebarContent
-          // className={$theme-bg}
-          className={
-            state === 'collapsed'
-              ? 'sidebarMenuCollapsed main-menu-outer'
-              : 'main-menu-outer'
-          }
-        >
-          <div className='main-logo border-b[#0A0F15] bg[#0A0F15] flex h-20 items-center justify-center'>
+    <Sidebar collapsible='icon' {...props}>
+      <SidebarContent className='theme-bg'>
+        <div className='main-logo border-b[#0A0F15] !bg-white flex h-20 items-center justify-center'>
             <Link href='/admin' className='flex-shrink-0'>
               {state === 'collapsed' ? (
                 <img
@@ -93,11 +87,12 @@ export function AppSidebar({ ...props }) {
           >
           </p> */}
           </div>
-          <NavMain homeItem={data.home} items={data.navMain} />
-        </SidebarContent>
-        <SidebarFooter></SidebarFooter>
-        <SidebarRail />
-      </Sidebar>
-    </>
+        <NavMain homeItem={data?.home} items={data.navMain} />
+      </SidebarContent>
+      <SidebarFooter>
+        <NavUser />
+      </SidebarFooter>
+      <SidebarRail />
+    </Sidebar>
   )
 }

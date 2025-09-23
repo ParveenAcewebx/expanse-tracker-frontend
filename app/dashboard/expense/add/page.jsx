@@ -56,7 +56,7 @@ export default function AddExpense() {
   
       setExpenses(prev => [...prev, newExpense])
       successMessage({ description: 'Expense added successfully!' })
-      router.push('/dashboard/expense-tracker')
+      router.push('/dashboard/expenses')
     } catch (error) {
       console.log('error', error)
       errorMessage({ description: 'Submission failed. Please try again.' })

@@ -32,7 +32,7 @@ export default function AddCategory() {
       setCategory(prev => [...prev, newCategory])
 
       successMessage({ description: 'Category added successfully!' })
-      router.push('/dashboard/category')
+      router.push('/dashboard/categories')
     } catch (error) {
       console.log('error', error)
       errorMessage({
