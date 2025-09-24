@@ -1,6 +1,7 @@
 'use client'
 
 import DateRangePicker from '@/components/share/form/DateRangePicker'
+import FormSelectField from '@/components/share/form/FormSelect'
 import { Card } from '@/components/ui/card'
 import {
   ArcElement,
@@ -14,9 +15,9 @@ import {
   Tooltip
 } from 'chart.js'
 import { addMonths, startOfToday } from 'date-fns'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Bar, Line, Pie } from 'react-chartjs-2'
-import { FormProvider, useForm } from 'react-hook-form'
+import { FormProvider, useForm, useWatch } from 'react-hook-form'
 
 ChartJS.register(
   ArcElement,
@@ -40,7 +41,8 @@ const ExpenseDashboard = () => {
       }
     }
   })
-  const [dummyData, setDummyData] = useState(null)
+  const [dummyData, setDummyData] = useState([])
+  const [options, setOptions] = useState([])
 
   const totalExpenses = [
     {
@@ -124,6 +126,11 @@ const ExpenseDashboard = () => {
       }, {})
     )
 
+    const categoryOptions = groupedExpenses.map(exp => ({
+      value: exp.category,
+      label: exp.category
+    }))
+    setOptions(categoryOptions)
     return {
       user: { name: 'Nicholas Delacruz', balance: 5240 },
       summary: {
@@ -138,6 +145,8 @@ const ExpenseDashboard = () => {
   // Filter when user picks dates
   const handleDataFilterBasedOnDate = (start, end) => {
     const newData = buildDummyData(start, end)
+    form.setValue('category', '')
+
     setDummyData(newData)
   }
 
@@ -156,29 +165,63 @@ const ExpenseDashboard = () => {
     from: startOfToday(),
     to: startOfToday()
   })
-  const totalExpenseAmount = dummyData?.totalExpenses?.reduce(
-    (acc, item) => acc + item.amount,
-    0
-  )
+  
 
+   const totalExpenseAmount = useMemo(
+    () => dummyData?.totalExpenses?.reduce((acc, item) => acc + item.amount, 0),
+    [dummyData?.totalExpenses]
+  )
+  console.log('totalExpenseAmount', totalExpenseAmount);
+  
+  // watch selected category
+  const selectedCategory = useWatch({ control: form.control, name: 'category' })
+
+  // fixed category colors
+  const categoryColors = {
+    'Mortgage / Rent': '#3B82F6',
+    Food: '#A3E635',
+    Utilities: '#FACC15',
+    Bills: '#D97706',
+    Shopping: '#6366F1',
+    Transportation: '#F472B6',
+    Insurance: '#8B5CF6',
+    'Health Care': '#C084FC',
+    Clothing: '#1D4ED8',
+    Others: '#06B6D4'
+  }
   // Pie chart data
+
   const pieData = {
-    labels: dummyData?.totalExpenses?.map(item => item.category),
+    labels:
+      selectedCategory && selectedCategory.trim() !== ''
+        ? [selectedCategory, '']
+        : dummyData?.totalExpenses?.map(item => item.category),
+
     datasets: [
       {
-        data: dummyData?.totalExpenses?.map(item => item.amount),
-        backgroundColor: [
-          '#3B82F6',
-          '#A3E635',
-          '#FACC15',
-          '#D97706',
-          '#6366F1',
-          '#F472B6',
-          '#8B5CF6',
-          '#C084FC',
-          '#1D4ED8',
-          '#06B6D4'
-        ],
+        data:
+          selectedCategory && selectedCategory.trim() !== ''
+            ? [
+                dummyData?.totalExpenses?.find(
+                  item => item.category === selectedCategory
+                )?.amount || 0,
+                totalExpenseAmount -
+                  (dummyData?.totalExpenses?.find(
+                    item => item.category === selectedCategory
+                  )?.amount || 0)
+              ]
+            : dummyData?.totalExpenses?.map(item => item.amount),
+
+        backgroundColor:
+          selectedCategory && selectedCategory.trim() !== ''
+            ? [
+                categoryColors[selectedCategory] || '#999999',
+                '#E5E7EB' // gray empty ring
+              ]
+            : dummyData?.totalExpenses?.map(
+                item => categoryColors[item.category] || '#999999'
+              ),
+
         borderWidth: 1,
         cutout: '60%'
       }
@@ -191,10 +234,8 @@ const ExpenseDashboard = () => {
       tooltip: {
         callbacks: {
           label: function (context) {
-            const label =
-              context.label ||
-              context.chart.data.labels[context.dataIndex] ||
-              ''
+            const label = context.label ||
+              context.chart.data.labels[context.dataIndex] ||''
             const value = context.parsed || 0
             const percentage = ((value / totalExpenseAmount) * 100).toFixed(2)
             return `${label}: $${value} (${percentage}%)`
@@ -243,6 +284,11 @@ const ExpenseDashboard = () => {
     maintainAspectRatio: false
   }
 
+   const centerAmount = selectedCategory
+    ? dummyData.totalExpenses.find((i) => i.category === selectedCategory)
+      ?.amount || 0
+    : totalExpenseAmount
+
   return (
     <>
       <div className='flex items-center justify-between'>
@@ -277,36 +323,32 @@ const ExpenseDashboard = () => {
 
       {/* Donut Chart */}
       <Card className='mt-4 rounded-lg border border-gray-200 p-4 shadow-md'>
-        <h2 className='mb-4 text-lg font-semibold'>Total Expenses</h2>
-        <div className='flex gap-6'>
+        <div>
+          <div className='flex justify-between gap-2'>
+            <h2 className='mb-4 text-lg font-semibold'>Total Expenses</h2>
+            <FormProvider {...form}>
+              <form>
+                <FormSelectField
+                  name='category'
+                  label=''
+                  placeholder='Select Category'
+                  form={form}
+                  options={options || []}
+                  className='colum-box-bg-change !mt-0 !w-44'
+                />
+              </form>
+            </FormProvider>
+          </div>
+        </div>
+        <div className='flex gap-8'>
           <div className='relative h-80 w-[60%]'>
             <Pie data={pieData} options={pieOptions} />
-            <div className='absolute inset-0 flex flex-col items-center justify-center'>
-              <div className='font-semibold text-gray-800'>Total</div>
-              <div className='text-xl font-bold text-blue-600'>
-                ${totalExpenseAmount}
-              </div>
+            <div className='pointer-events-none absolute inset-0 flex flex-col items-center justify-center'>
+              <div className='font-semibold text-gray-800'>{selectedCategory || 'Total'}
+</div>
+              <div className='text-xl font-bold text-blue-600'>₹{centerAmount}
+</div>
             </div>
-          </div>
-          {/* Legend */}
-          <div className='flex flex-1 flex-col justify-center gap-2 pr-52'>
-            {dummyData?.totalExpenses?.map((item, idx) => (
-              <div key={idx} className='flex items-center justify-between'>
-                <div className='flex items-center gap-2'>
-                  <div
-                    className='h-4 w-4 rounded-full'
-                    style={{
-                      backgroundColor: pieData.datasets[0].backgroundColor[idx]
-                    }}
-                  />
-                  <span className='text-gray-700'>{item.category}</span>
-                </div>
-                <div className='text-gray-900'>
-                  ${item.amount} (
-                  {((item.amount / totalExpenseAmount) * 100).toFixed(2)}%)
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       </Card>

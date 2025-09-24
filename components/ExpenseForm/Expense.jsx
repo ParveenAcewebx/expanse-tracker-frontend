@@ -1,10 +1,16 @@
 'use client'
+import { useState } from 'react'
 import FormDatePicker from '../share/form/datePicker'
 import FileUpload from '../share/form/FileUpload'
 import FormInputField from '../share/form/FormInputField'
 import FormSelectField from '../share/form/FormSelect'
+import { MultiImageUploader } from '../share/form/MultiFileUpload'
+import { CloudCog } from 'lucide-react'
+import FormTextArea from '../share/form/TextArea'
 
-const Expense = ({form}) => {
+const Expense = ({form ,setImageUpload , updateImage ,setDeletedOldImages, setFiles, files}) => {
+console.log("files->>>>>>>>>>>>>>>>>>>",files);
+
   const categoryData = [
     {
       label: 'Category 1',
@@ -31,10 +37,12 @@ const Expense = ({form}) => {
       value: 'category6'
     }
   ]
+
+ 
   return (
     <>
-      <div className='grid grid-cols-2 gap-4 space-x-2'>
-        <FormDatePicker label='Date' name='expense.date' placeholder='Select Date' />
+      <div className='grid grid-cols-2 gap-4 '>
+        <FormDatePicker  className='!border !rounded' label='Date' name='expense.date' placeholder='Select Date' />
         <FormInputField
           label='Amount $'
           name='expense.amount'
@@ -55,22 +63,31 @@ const Expense = ({form}) => {
           // type='number'
           placeholder='Enter Account'
         />
-        <FormInputField
+        <FormTextArea
           label='Note'
           name='expense.note'
           type='text'
           placeholder='Enter Note'
         />
-        <FormInputField
+        <FormTextArea
           label='Description'
           name='expense.description'
           type='text'
           placeholder='Enter Description'
         />
       </div>
-      <div className='mt-6'>
+      {/* <div className='mt-4 grid grid-cols-1 gap-4 space-x-2'>
         <FileUpload name='expense.image' label='Choose Image' />
-      </div>
+      </div> */}
+      <div className='mb-4 grid grid-cols-1 gap-6 md:grid-cols-1 mt-7'>
+                            <MultiImageUploader
+                                setImageUpload={setImageUpload}
+                                updateImage={updateImage}
+                                setDeletedOldImages={setDeletedOldImages}
+                                setFiles={setFiles}
+                                files={files}
+                            />
+                        </div>
     </>
   )
 }

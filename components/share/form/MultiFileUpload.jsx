@@ -78,7 +78,7 @@ const MultiImageUploader = ({
     <div className='theme-bg-light-rgba mx-auto w-full rounded-sm border-2 border-dashed p-8'>
       <div {...getRootProps({ className: 'text-center cursor-pointer' })}>
         <input {...getInputProps()} />
-        <h2 className='text-xl'>Drop your files here</h2>
+        <h2 className='text-xl'>Choose Images</h2>
         <p className='rounded-6 bg-white p-4 text-sm font-medium'>
           <Upload className='m-auto' /> Upload
         </p>

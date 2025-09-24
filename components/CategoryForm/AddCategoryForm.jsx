@@ -1,16 +1,24 @@
 'use client'
-import FileUpload from '../share/form/FileUpload'
 import FormInputField from '../share/form/FormInputField'
 import FormSelectField from '../share/form/FormSelect'
+import { MultiImageUploader } from '../share/form/MultiFileUpload'
 
-export default function AddCategoryForm({ form, editData }) {
+export default function AddCategoryForm({
+  form,
+  editData,
+  setImageUpload,
+  updateImage,
+  setDeletedOldImages,
+  setFiles,
+  files
+}) {
   const categoryType = [
     { label: 'Expense', value: 'expense' },
     { label: 'Income', value: 'income' }
   ]
   return (
     <>
-      <div className='mt-4 grid grid-cols-2 gap-4'>
+      <div className='mt-4 grid grid-cols-3 gap-4'>
         <FormInputField
           name='name'
           className=''
@@ -32,9 +40,20 @@ export default function AddCategoryForm({ form, editData }) {
           label='Type'
           placeholder='Select type'
           options={categoryType}
-          
         />
-        <FileUpload name='icon' label='Choose Icon' />
+      </div>
+      {/* <div className='mt-4 grid grid-cols-1 gap-4'> */}
+      {/* <FileUpload name='icon' label='Choose Icon' /> */}
+      {/* </div> */}
+
+      <div className='mb-4 mt-7 grid grid-cols-1 gap-6 md:grid-cols-1'>
+        <MultiImageUploader
+          setImageUpload={setImageUpload}
+          updateImage={updateImage}
+          setDeletedOldImages={setDeletedOldImages}
+          setFiles={setFiles}
+          files={files}
+        />
       </div>
     </>
   )

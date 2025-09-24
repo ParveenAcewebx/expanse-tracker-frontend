@@ -8,6 +8,8 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import AddCategoryForm from './AddCategoryForm'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { CategoryFormValidation } from '../form-validations/CategoryFormValidation'
 
 const EditCategoryForm = ({ editId }) => {
   const searchParams = useSearchParams()
@@ -18,7 +20,9 @@ const EditCategoryForm = ({ editId }) => {
       name: '',
       type: '',
       parent: ''
-    }
+    },
+    resolver: yupResolver(CategoryFormValidation)
+    
   })
   useDocumentTitle('Edit Expense')
   const router = useRouter()
@@ -56,7 +60,7 @@ const EditCategoryForm = ({ editId }) => {
       // if (responseEdit?.status === 200) {
       form.reset()
       successMessage({ description: 'Category updated successfully' })
-      router.push('/dashboard/category')
+      router.push('/dashboard/categories')
       // }
     } catch (error) {
       console.log('error', error)

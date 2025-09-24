@@ -4,7 +4,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
 import Expense from './Expense'
 import Income from './Income'
 
-export default function AddExpenseForm({ form, editData }) {
+export default function AddExpenseForm({
+  form,
+  editData,
+  setImageUpload,
+  updateImage,
+  setDeletedOldImages,
+  setFiles,
+  files
+}) {
   const [userData, setUserData] = useState([])
 
   return (
@@ -25,15 +33,21 @@ export default function AddExpenseForm({ form, editData }) {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value='expense' >
-          <Expense form={form} />
+        <TabsContent value='expense'>
+          <Expense
+            form={form}
+            setImageUpload={setImageUpload}
+            updateImage={updateImage}
+            setDeletedOldImages={setDeletedOldImages}
+            setFiles={setFiles}
+            files={files}
+          />
         </TabsContent>
 
         <TabsContent value='income'>
           <Income />
         </TabsContent>
       </Tabs>
-
     </>
   )
 }

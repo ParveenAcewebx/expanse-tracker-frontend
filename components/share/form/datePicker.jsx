@@ -13,7 +13,6 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover'
-import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
 
 import { CalendarIcon } from 'lucide-react'
@@ -25,6 +24,7 @@ const FormDatePicker = ({
   label,
   disabled,
   className,
+
   placeholder
 }) => {
   const [open, setOpen] = useState(false)
@@ -32,18 +32,21 @@ const FormDatePicker = ({
     <FormField
       control={form?.control}
       name={name}
-      render={({ field }) => (
+      render={({ field , fieldState }) => (
         <FormItem>
+          {console.log("field.error",fieldState.error)
+          }
           <FormLabel>{label}</FormLabel>
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <FormControl>
                 <Button
                   variant='outline'
+                  style={{ borderRadius: '0.25rem !important' }}
                   onClick={() => setOpen(prev => !prev)}
-                  className={cn(
-                    `border-color-grey shadow-none', !field.value && 'text-muted-foreground h-12 w-full rounded pl-3 text-left font-normal ${className}`
-                  )}
+                  className={`h-12 w-full justify-between font-normal ${
+                    !field.value ? 'text-muted-foreground' : ''
+                  } ${fieldState.error ? 'border-red-500' : ''} ${className}`}
                 >
                   {field?.value && !isNaN(new Date(field?.value).getTime())
                     ? format(new Date(field?.value), 'MM/dd/yy')

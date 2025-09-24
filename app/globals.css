@@ -170,6 +170,11 @@ body .bg-red {
 .bg-yellow-900 {
   background-color: #04aee1 !important;
 } */
+
+
+.datepickerouter .Mui-error fieldset.MuiPickersOutlinedInput-notchedOutline {
+  border-color: #d32f2f !important;
+}
 .text-color {
   color: #231f20 !important;
 }

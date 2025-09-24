@@ -28,7 +28,7 @@ const AllExpenseList = () => {
   }
 
   const handleEditExpense = row => {
-    router.push(`/dashboard/expense-tracker/edit?id=${row.original.id}`)
+    router.push(`/dashboard/expense/edit?id=${row.original.id}`)
   }
 
   return (
@@ -37,7 +37,7 @@ const AllExpenseList = () => {
         <LayoutHeader pageTitle='Expenses List' />
         <Button
           className='site-button'
-          onClick={() => router.push(`/dashboard/expense-tracker/add`)}
+          onClick={() => router.push(`/dashboard/expense/add`)}
         >
           <Plus />
           Add Expense
